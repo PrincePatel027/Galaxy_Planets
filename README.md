@@ -11,7 +11,9 @@ Galaxy Planets is a Flutter application that showcases various planets and allow
 
 ## Images & Videos
 
-// Add images and videos here
+https://github.com/user-attachments/assets/89d667e6-00ac-40b7-9332-5c722a100d39
+
+![Galaxy_Planets](https://github.com/user-attachments/assets/18fc284d-8a28-428b-a242-6934afeb7503)
 
 ## Getting Started
 
