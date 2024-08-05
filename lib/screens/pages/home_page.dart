@@ -116,76 +116,7 @@ class _HomePageState extends State<HomePage>
                   barrierDismissible: false,
                   context: context,
                   builder: (context) {
-                    return AlertDialog.adaptive(
-                      title: const Text("Liked Planets"),
-                      actions: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.cancel),
-                        )
-                      ],
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          (Provider.of<LikeProvider>(context).likedData.isEmpty)
-                              ? Container(
-                                  height: getHeight(context) / 3,
-                                  alignment: Alignment.center,
-                                  child: const Text("No liked planets..."),
-                                )
-                              : Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ...List.generate(
-                                      Provider.of<LikeProvider>(context)
-                                          .likedData
-                                          .length,
-                                      (index) {
-                                        return ListTile(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => DetailPage(
-                                                    data: Provider.of<
-                                                                LikeProvider>(
-                                                            context)
-                                                        .likedData[index]),
-                                              ),
-                                            );
-                                          },
-                                          leading: CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                              Provider.of<LikeProvider>(context)
-                                                  .likedData[index]['image'],
-                                            ),
-                                          ),
-                                          title: Text(
-                                            Provider.of<LikeProvider>(context)
-                                                .likedData[index]['name'],
-                                          ),
-                                          subtitle: Text(
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            Provider.of<LikeProvider>(context)
-                                                    .likedData[index]
-                                                ['description'],
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                )
-                          // Text(
-                          //     Provider.of<LikeProvider>(context)
-                          //         .likedData
-                          //         .toString(),
-                          //   ),
-                        ],
-                      ),
-                    );
+                    return const LikedPlanetsItemAlertBox();
                   },
                 );
               },
@@ -346,6 +277,101 @@ class _HomePageState extends State<HomePage>
   }
 }
 
+class LikedPlanetsItemAlertBox extends StatefulWidget {
+  const LikedPlanetsItemAlertBox({
+    super.key,
+  });
+
+  @override
+  State<LikedPlanetsItemAlertBox> createState() =>
+      _LikedPlanetsItemAlertBoxState();
+}
+
+class _LikedPlanetsItemAlertBoxState extends State<LikedPlanetsItemAlertBox> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog.adaptive(
+      title: const Text("Liked Planets"),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.cancel),
+        )
+      ],
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          (Provider.of<LikeProvider>(context).likedData.isEmpty)
+              ? Container(
+                  height: getHeight(context) / 3,
+                  alignment: Alignment.center,
+                  child: const Text("No liked planets..."),
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ...List.generate(
+                      Provider.of<LikeProvider>(context).likedData.length,
+                      (index) {
+                        return ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailPage(
+                                    data: Provider.of<LikeProvider>(context)
+                                        .likedData[index]),
+                              ),
+                            );
+                          },
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage(
+                              Provider.of<LikeProvider>(context)
+                                  .likedData[index]['image'],
+                            ),
+                          ),
+                          title: Text(
+                            Provider.of<LikeProvider>(context).likedData[index]
+                                ['name'],
+                          ),
+                          subtitle: Text(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            Provider.of<LikeProvider>(context).likedData[index]
+                                ['description'],
+                          ),
+                          trailing: PopupMenuButton(
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                onTap: () {
+                                  Provider.of<LikeProvider>(
+                                    context,
+                                    listen: false,
+                                  ).likedData.removeAt(index);
+                                  setState(() {});
+                                },
+                                child: const Text("Remove"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                )
+          // Text(
+          //     Provider.of<LikeProvider>(context)
+          //         .likedData
+          //         .toString(),
+          //   ),
+        ],
+      ),
+    );
+  }
+}
+
 // Center(
 //               child: AnimatedBuilder(
 //                 animation: animationController,
@@ -453,10 +479,6 @@ class PlanetImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // ignore: avoid_print
-        print(data![index]);
-
-        ///
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) {
             return DetailPage(
