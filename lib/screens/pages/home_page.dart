@@ -5,8 +5,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:galaxy_planets/provider/like_provider.dart';
+import 'package:galaxy_planets/provider/theme_provider.dart';
 import 'package:galaxy_planets/screens/pages/detail_page.dart';
 import 'package:galaxy_planets/utils/height_width.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -38,9 +41,193 @@ class _HomePageState extends State<HomePage>
     animationController.repeat();
   }
 
+  List themeList = [
+    "Light",
+    "Dark",
+    "System",
+  ];
+
+  String defaultThemeMode = "Light";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: Column(
+          children: [
+            DrawerHeader(
+              padding: EdgeInsets.zero,
+              child: UserAccountsDrawerHeader(
+                decoration: BoxDecoration(color: Colors.green[100]),
+                margin: EdgeInsets.zero,
+                currentAccountPicture: const CircleAvatar(),
+                accountName: const Text(
+                  "Prince Patel",
+                  style: TextStyle(color: Colors.black),
+                ),
+                accountEmail: const Text(
+                  "princepatel699@gmail.com",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: getWidth(context) / 20),
+              margin: const EdgeInsets.only(bottom: 10),
+              color: Colors.transparent,
+              alignment: Alignment.centerLeft,
+              child: Column(
+                children: [
+                  const SizedBox(height: 18),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Theme Mode",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      Icon(Icons.dark_mode),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  ...List.generate(
+                    themeList.length,
+                    (index) => RadioListTile(
+                      contentPadding: const EdgeInsets.all(0),
+                      title: Text(themeList[index]),
+                      value: themeList[index],
+                      groupValue:
+                          Provider.of<ThemeProvider>(context).defaultThemeMode,
+                      onChanged: (value) {
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .toggleThemeMode(value);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog.adaptive(
+                      title: const Text("Liked Planets"),
+                      actions: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.cancel),
+                        )
+                      ],
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          (Provider.of<LikeProvider>(context).likedData.isEmpty)
+                              ? Container(
+                                  height: getHeight(context) / 3,
+                                  alignment: Alignment.center,
+                                  child: const Text("No liked planets..."),
+                                )
+                              : Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ...List.generate(
+                                      Provider.of<LikeProvider>(context)
+                                          .likedData
+                                          .length,
+                                      (index) {
+                                        return ListTile(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => DetailPage(
+                                                    data: Provider.of<
+                                                                LikeProvider>(
+                                                            context)
+                                                        .likedData[index]),
+                                              ),
+                                            );
+                                          },
+                                          leading: CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                              Provider.of<LikeProvider>(context)
+                                                  .likedData[index]['image'],
+                                            ),
+                                          ),
+                                          title: Text(
+                                            Provider.of<LikeProvider>(context)
+                                                .likedData[index]['name'],
+                                          ),
+                                          subtitle: Text(
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            Provider.of<LikeProvider>(context)
+                                                    .likedData[index]
+                                                ['description'],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                )
+                          // Text(
+                          //     Provider.of<LikeProvider>(context)
+                          //         .likedData
+                          //         .toString(),
+                          //   ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Container(
+                padding:
+                    EdgeInsets.symmetric(horizontal: getWidth(context) / 20),
+                margin: const EdgeInsets.only(bottom: 10),
+                height: getHeight(context) / 14,
+                color: Colors.transparent,
+                alignment: Alignment.centerLeft,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Liked Planets",
+                        style: TextStyle(
+                          fontSize: 18,
+                        )),
+                    Icon(Icons.favorite),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: getWidth(context) / 20),
+              margin: const EdgeInsets.only(bottom: 10),
+              height: getHeight(context) / 14,
+              color: Colors.transparent,
+              alignment: Alignment.centerLeft,
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Settings",
+                      style: TextStyle(
+                        fontSize: 18,
+                      )),
+                  Icon(Icons.settings),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Home Page"),
