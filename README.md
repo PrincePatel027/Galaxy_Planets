@@ -1,16 +1,64 @@
-# galaxy_planets
+# Galaxy Planets App
 
-A new Flutter project.
+Galaxy Planets is a Flutter application that showcases various planets and allows users to like their favorite ones. The app supports both light and dark themes, with theme preferences managed by a provider.
+
+## Features
+
+- **Splash Screen**: Welcome screen that greets users when the app is launched.
+- **Home Page**: Main page displaying a list of planets.
+- **Like Functionality**: Users can like their favorite planets.
+- **Theme Support**: The app supports light, dark, and system themes.
+
+## Images & Videos
+
+// Add images and videos here
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-A few resources to get you started if this is your first Flutter project:
+### Prerequisites
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Flutter SDK: [Installation Guide](https://flutter.dev/docs/get-started/install)
+- Android Studio or Visual Studio Code (with Flutter extensions installed)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Installing
+
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/PrincePatel027/Galaxy_Planets
+    cd galaxy-planets
+    ```
+
+2. **Install dependencies**:
+    ```bash
+    flutter pub get
+    ```
+
+3. **Run the app**:
+    ```bash
+    flutter run
+    ```
+
+## Project Structure
+
+```plaintext
+lib/
+├── main.dart              
+├── provider/
+│   ├── like_provider.dart  
+│   └── theme_provider.dart 
+preferences
+├── screens/
+│   └── pages/
+│       ├── home_page.dart  
+│       └── splash_screen.dart 
+```
+
+## Providers
+
+The app uses the provider package to manage state:
+
+- LikeProvider: Manages the list of liked planets.
+- ThemeProvider: Manages theme preferences (light, dark, or system).
+
